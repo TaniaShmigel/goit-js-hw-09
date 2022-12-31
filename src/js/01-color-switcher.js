@@ -19,8 +19,9 @@ function isActive() {
 }
 
 function onBtnStartClick() {
-  setInterval(changeColor, DELAY);
+  intervalId = setInterval(changeColor, DELAY);
   btnStart.setAttribute('disabled', 'disabled');
+  btnStop.removeAttribute('disabled');
 }
 
 function changeColor() {
@@ -29,9 +30,7 @@ function changeColor() {
 }
 
 function onBtnStopClick() {
-  let intervalId = setInterval(changeColor, DELAY);
   clearInterval(intervalId);
   btnStop.setAttribute('disabled', 'disabled');
   btnStart.removeAttribute('disabled');
-  console.log(intervalId);
 }
