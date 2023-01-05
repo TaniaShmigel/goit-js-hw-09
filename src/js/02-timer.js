@@ -10,6 +10,7 @@ const dateSecond = document.querySelector('[data-seconds]');
 
 const DELAY = 1000;
 let timer = 0;
+let intervalId = null;
 
 startBtn.addEventListener('click', onStartBtn);
 
@@ -23,14 +24,17 @@ const options = {
       Notiflix.Notify.failure('Please choose a date in the future');
     }
     timer = selectedDates[0] - new Date();
-    startBtn.removeAttribute('disabled');
+    if (selectedDates[0] > new Date()) {
+      startBtn.removeAttribute('disabled');
+    }
   },
 };
 
 flatpickr('#datetime-picker', options);
 
 function onStartBtn() {
-  setInterval(setTime, DELAY);
+  intervalId = setInterval(setTime, DELAY);
+
   startBtn.setAttribute('disabled', 'disabled');
 }
 
@@ -41,7 +45,13 @@ function setTime() {
   dateHour.textContent = hours;
   dateMinute.textContent = minutes;
   dateSecond.textContent = seconds;
-  // console.log(timer)
+  countdownTimer();
+}
+
+function countdownTimer() {
+  if (timer <= 0) {
+    clearInterval(intervalId);
+  }
 }
 
 function timeReduction(time) {
@@ -49,7 +59,7 @@ function timeReduction(time) {
   return timer;
 }
 
-function pad(value) {
+function addLeadingZer(value) {
   return String(value).padStart(2, '0');
 }
 
@@ -61,13 +71,15 @@ function convertMs(ms) {
   const day = hour * 24;
 
   // Remaining days
-  const days = pad(Math.floor(ms / day));
+  const days = addLeadingZer(Math.floor(ms / day));
   // Remaining hours
-  const hours = pad(Math.floor((ms % day) / hour));
+  const hours = addLeadingZer(Math.floor((ms % day) / hour));
   // Remaining minutes
-  const minutes = pad(Math.floor(((ms % day) % hour) / minute));
+  const minutes = addLeadingZer(Math.floor(((ms % day) % hour) / minute));
   // Remaining seconds
-  const seconds = pad(Math.floor((((ms % day) % hour) % minute) / second));
+  const seconds = addLeadingZer(
+    Math.floor((((ms % day) % hour) % minute) / second)
+  );
 
   return { days, hours, minutes, seconds };
 }
