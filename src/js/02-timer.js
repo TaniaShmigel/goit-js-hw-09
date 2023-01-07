@@ -49,7 +49,7 @@ function setTime() {
 }
 
 function countdownTimer() {
-  if (timer <= 0) {
+  if (timer - DELAY <= 0) {
     clearInterval(intervalId);
   }
 }
